@@ -3,11 +3,46 @@ using System.Net.Http.Headers;
 using System.Net.Mime;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 
 namespace Vankrupt.Pavlov;
 
 public class Http : IDisposable
 {
+
+	/// <summary>
+	/// Regrex to validate some URLs.
+	/// </summary>
+	public static readonly Regex UrlRegex = new(@"^(https?):\/\/(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.?)+(?::(?:0|[1-9]\d{0,3}|[1-5]\d{4}|6[0-4]\d{3}|65[0-4]\d{2}|655[0-2]\d|6553[0-5]))?(?:\/(?:[-a-zA-Z0-9@%_+.~#?&=]+\/?)*)?$", RegexOptions.IgnoreCase);
+
+	/// <summary>
+	/// Appends path to url.
+	/// </summary>
+	/// <param name="host">Host url.</param>
+	/// <param name="path">Path to append into host url.</param>
+	/// <returns>Url with path append to host url.</returns>
+	/// <exception cref="InvalidDataException">Id invalid url was provided.</exception>
+	public static string UrlAppend(string host, string path)
+	{
+		// Validate Url
+		if (!UrlRegex.Match($"{host}").Success) throw new InvalidDataException($"Invalid URL provided; '{host}'!");
+
+		// Get base url
+		var x = host.Split('?');
+		host = x[0];
+
+		// Add path to host url
+		if (!host.EndsWith('/')) host += '/';
+		host += path;
+
+		// Combine all
+		for (uint i = 1; i < x.Length; i++) host += '?' + x[i];
+
+		// Return fixed
+		return host;
+	}
+
+
 	/// <summary>
 	/// Make Uri object from url string.
 	/// </summary>

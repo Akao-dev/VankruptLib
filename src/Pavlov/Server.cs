@@ -11,64 +11,60 @@ namespace Vankrupt.Pavlov;
 public static class Server
 {
 	/// <summary>
-	/// Urls related to operation.
+	/// Generates URL for fetching replays.
 	/// </summary>
-	public static class Urls
+	/// <param name="host">Host URL.</param>
+	/// <param name="player_name">Player name to search/filter with (must be exact).</param>
+	/// <returns>Generated URL.</returns>
+	/// <exception cref="InvalidDataException">If URL is invalid.</exception>
+	public static string Url_ReplayList(string host, string? player_name = null)
 	{
-		private static string _Host_URL = "https://tv.vankrupt.net/";
-		public static string Host
-		{
-			get
-			{
-				return _Host_URL;
-			}
-			set
-			{
-				string tmp = value;
-				if (Uri.TryCreate(tmp, UriKind.RelativeOrAbsolute, out _))
-					_Host_URL = tmp;
-			}
-		}
-		public static string ReplayList
-		{
-			get
-			{
-				if (Host.EndsWith('/'))
-					return Host + "find";
-				return Host + "/find";
-			}
-		}
-		public static string Stats(string replay_id)
-		{
-			if (!Host.EndsWith('/')) Host += "/";
-			return Host + $"replay/{HttpUtility.UrlEncode(replay_id)}/stats";
-		}
+		string path = "find";
+
+		// Add player name in to search if needed
+		if (player_name != null) path += '/' + HttpUtility.UrlEncode(player_name); ;
+
+		// Generate URL
+		return UrlAppend(host, path);
 	}
 
 	/// <summary>
-	/// Http connection context.
+	/// Generates URL for replay statistics.
 	/// </summary>
-	internal static readonly Http http_ctx = new();
+	/// <param name="host">Host URL.</param>
+	/// <param name="replay_id">Replay id which stats to fetch.</param>
+	/// <returns>Generated URL.</returns>
+	/// <exception cref="InvalidDataException">If URL or replay id is invalid.</exception>
+	public static string Url_Stats(string host, string replay_id)
+	{
+		// Test ids validity
+		if (string.IsNullOrWhiteSpace(replay_id)) throw new InvalidDataException("Invalid replay id!");
+
+		// Make player name search if needed
+		string path = "replay/" + HttpUtility.UrlEncode(replay_id) + "/stats";
+
+		// Generate URL
+		return UrlAppend(host, path);
+	}
 
 	/// <summary>
 	/// Get all replays listed in official Pavlov server.
 	/// </summary>
+	/// <param name="http_ctx">Context of special HTTP handling class.</param>
 	/// <param name="player_name">Filter by player name.</param>
+	/// <param name="host">Host address URL.</param>
 	/// <returns>ReplayList from Pavlov server.</returns>
-	public static Result<List<HttpResponse.ReplayList_.Replay_>> GetReplays(string? player_name = null)
+	/// <exception cref="InvalidDataException">If URL is invalid.</exception>
+	public static Result<List<HttpResponses.ReplayList_.Replay_>> GetReplays(ref Http http_ctx, string? player_name = null, string host = "https://tv.vankrupt.net/")
 	{
-		List<HttpResponse.ReplayList_.Replay_> replays = [];
+		List<HttpResponses.ReplayList_.Replay_> replays = [];
 		UrlEncoder urlEncoder = UrlEncoder.Default;
-		string url = Urls.ReplayList;
 		int offset = 0;
 		int total = 0;
 		HttpStatusCode code = HttpStatusCode.BadRequest;
 		long TimeHttp = 0;
 		long TimeProcessing = 0;
 		long TimeTotal = 0;
-
-		// Add player argument into path URI
-		if (player_name != null) url += "/" + urlEncoder.Encode(player_name);
 
 		do
 		{
@@ -77,12 +73,12 @@ public static class Server
 			urlParams.Add(new("offset", $"{offset}"));
 
 			// Get next replays
-			var result = http_ctx.GetJson<HttpResponse.ReplayList_>(url, urlParams, null);
+			var result = http_ctx.GetJson<HttpResponses.ReplayList_>(Url_ReplayList(host, player_name), urlParams, null);
 
 			// Error handling
 			if (!result.OK || result.Data?.replays == null)
 			{
-				return new Result<List<HttpResponse.ReplayList_.Replay_>>()
+				return new Result<List<HttpResponses.ReplayList_.Replay_>>()
 				{
 					OK = result.OK,
 					Code = result.Code,
@@ -128,7 +124,7 @@ public static class Server
 		while (replays.Count < total);
 
 		// Return result
-		return new Result<List<HttpResponse.ReplayList_.Replay_>>()
+		return new Result<List<HttpResponses.ReplayList_.Replay_>>()
 		{
 			OK = true,
 			Code = code,
@@ -148,10 +144,20 @@ public static class Server
 	/// </summary>
 	/// <param name="replay_id">Id of replay.</param>
 	/// <returns>Replay stats.</returns>
-	public static Result<HttpResponse.ReplayStats_> GetReplayStats(string replay_id) => http_ctx.GetJson<HttpResponse.ReplayStats_>(Urls.Stats(replay_id), null, null);
+	/// <exception cref="InvalidDataException">If URL or replay id is invalid.</exception>
+	public static Result<HttpResponses.ReplayStats_> GetReplayStats(ref Http http_ctx, string replay_id, string host = "https://tv.vankrupt.net/") => http_ctx.GetJson<HttpResponses.ReplayStats_>(Url_Stats(host, replay_id), null, null);
 
-	public static class HttpResponse
+
+
+	/// <summary>
+	/// JSON template classes for API calls - Pavlov TV replay hosting server.
+	/// </summary>
+	public static class HttpResponses
 	{
+
+		/// <summary>
+		/// Replay list - Pavlov TV replay hosting server.
+		/// </summary>
 		public class ReplayList_
 		{
 			public List<Replay_>? replays { get; set; } = null;
@@ -216,6 +222,9 @@ public static class Server
 			}
 		}
 
+		/// <summary>
+		/// Replay stats published by server - Pavlov TV replay hosting server.
+		/// </summary>
 		public class ReplayStats_
 		{
 			public List<PlayerStats_>? allStats { get; set; } = null;
