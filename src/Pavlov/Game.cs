@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Text.RegularExpressions;
 using static Vankrupt.Pavlov.Http;
 
 namespace Vankrupt.Pavlov;
