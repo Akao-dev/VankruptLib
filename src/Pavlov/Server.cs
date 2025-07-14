@@ -55,7 +55,7 @@ public static class Server
 	/// <param name="host">Host address URL.</param>
 	/// <returns>ReplayList from Pavlov server.</returns>
 	/// <exception cref="InvalidDataException">If URL is invalid.</exception>
-	public static Result<List<HttpResponses.ReplayList_.Replay_>> GetReplays(ref Http http_ctx, string? player_name = null, string host = "https://tv.vankrupt.net/")
+	public static Result<List<HttpResponses.ReplayList_.Replay_>> GetReplays(Http http_ctx, string? player_name = null, string host = "https://tv.vankrupt.net/")
 	{
 		List<HttpResponses.ReplayList_.Replay_> replays = [];
 		UrlEncoder urlEncoder = UrlEncoder.Default;
@@ -145,7 +145,7 @@ public static class Server
 	/// <param name="replay_id">Id of replay.</param>
 	/// <returns>Replay stats.</returns>
 	/// <exception cref="InvalidDataException">If URL or replay id is invalid.</exception>
-	public static Result<HttpResponses.ReplayStats_> GetReplayStats(ref Http http_ctx, string replay_id, string host = "https://tv.vankrupt.net/") => http_ctx.GetJson<HttpResponses.ReplayStats_>(Url_Stats(host, replay_id), null, null);
+	public static Result<HttpResponses.ReplayStats_> GetReplayStats(Http http_ctx, string replay_id, string host = "https://tv.vankrupt.net/") => http_ctx.GetJson<HttpResponses.ReplayStats_>(Url_Stats(host, replay_id), null, null);
 
 
 

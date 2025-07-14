@@ -153,7 +153,7 @@ public static class Game
 		/// <returns>ReplayList from Pavlov TV</returns>
 		/// <exception cref="InvalidDataException">If invalid host URL is provided.</exception>
 		[Obsolete("This function is rendered as obsolete since better list can be queried directly from server, but left here since it might be useful in some cenarios.")]
-		public static Result<HttpResponses.ReplayList_> GetReplays(ref Http http_ctx, string host = "http://localhost/")
+		public static Result<HttpResponses.ReplayList_> GetReplays(Http http_ctx, string host = "http://localhost/")
 		{
 			// Append path to url
 			string url = UrlAppend(host, UrlPath_ReplayList);
@@ -170,7 +170,7 @@ public static class Game
 		/// <param name="host">Host address URL.</param>
 		/// <returns>True, if error occurred.</returns>
 		/// <exception cref="InvalidDataException">If invalid host URL is provided.</exception>
-		public static bool LoadReplay(ref Http http_ctx, string replay_id, string host = "http://localhost/")
+		public static bool LoadReplay(Http http_ctx, string replay_id, string host = "http://localhost/")
 		{
 			Result<HttpResponses.Default_> response;
 
@@ -191,7 +191,7 @@ public static class Game
 		/// <param name="host">Host address URL.</param>
 		/// <returns>Match events.</returns>
 		/// <exception cref="InvalidDataException">If invalid host URL is provided.</exception>
-		public static Result<HttpResponses.MatchEvents_> GetEvents(ref Http http_ctx, string host = "http://localhost/")
+		public static Result<HttpResponses.MatchEvents_> GetEvents(Http http_ctx, string host = "http://localhost/")
 		{
 			// Append path to url
 			string url = UrlAppend(host, UrlPath_MatchEvents);
@@ -207,7 +207,7 @@ public static class Game
 		/// <param name="host">Host address URL.</param>
 		/// <returns>Replay status.</returns>
 		/// <exception cref="InvalidDataException">If invalid host URL is provided.</exception>
-		public static Result<HttpResponses.MatchStatus_> GetStatus(ref Http http_ctx, string host = "http://localhost/")
+		public static Result<HttpResponses.MatchStatus_> GetStatus(Http http_ctx, string host = "http://localhost/")
 		{
 			// Append path to url
 			string url = UrlAppend(host, UrlPath_MatchStatus);
@@ -223,7 +223,7 @@ public static class Game
 		/// <param name="host">Host address URL.</param>
 		/// <returns>Locations.</returns>
 		/// <exception cref="InvalidDataException">If invalid host URL is provided.</exception>
-		public static Result<HttpResponses.Locations_> GetLocations(ref Http http_ctx, string host = "http://localhost/")
+		public static Result<HttpResponses.Locations_> GetLocations(Http http_ctx, string host = "http://localhost/")
 		{
 			// Append path to url
 			string url = UrlAppend(host, UrlPath_PlayersPos);
@@ -239,7 +239,7 @@ public static class Game
 		/// <param name="host">Host address URL.</param>
 		/// <returns>Killfeed.</returns>
 		/// <exception cref="InvalidDataException">If invalid host URL is provided.</exception>
-		public static Result<HttpResponses.Killfeed_> GetKillfeed(ref Http http_ctx, string host = "http://localhost/")
+		public static Result<HttpResponses.Killfeed_> GetKillfeed(Http http_ctx, string host = "http://localhost/")
 		{
 			// Append path to url
 			string url = UrlAppend(host, UrlPath_Killfeed);
@@ -255,7 +255,7 @@ public static class Game
 		/// <param name="host">Host address URL.</param>
 		/// <returns>Match time. Null on error.</returns>
 		/// <exception cref="InvalidDataException">If invalid host URL is provided.</exception>
-		public static double? GetTime(ref Http http_ctx, string host = "http://localhost/")
+		public static double? GetTime(Http http_ctx, string host = "http://localhost/")
 		{
 			Result<HttpResponses.MatchTime_> result;
 
@@ -278,7 +278,7 @@ public static class Game
 		/// <param name="host">Host address URL.</param>
 		/// <returns>True, on success.</returns>
 		/// <exception cref="InvalidDataException">If invalid host URL is provided.</exception>
-		public static bool? SetTime(ref Http http_ctx, double time, string host = "http://localhost/")
+		public static bool? SetTime(Http http_ctx, double time, string host = "http://localhost/")
 		{
 			Result<HttpResponses.Default_> response;
 
@@ -302,7 +302,7 @@ public static class Game
 		/// <param name="host">Host address URL.</param>
 		/// <returns>Pause state. Null on error.</returns>
 		/// <exception cref="InvalidDataException">If invalid host URL is provided.</exception>
-		public static bool? GetPause(ref Http http_ctx, string host = "http://localhost/")
+		public static bool? GetPause(Http http_ctx, string host = "http://localhost/")
 		{
 			Result<HttpResponses.Pause_> result;
 
@@ -325,7 +325,7 @@ public static class Game
 		/// <param name="host">Host address URL.</param>
 		/// <returns>True, on success.</returns>
 		/// <exception cref="InvalidDataException">If invalid host URL is provided.</exception>
-		public static bool? SetPause(ref Http http_ctx, bool pause, string host = "http://localhost/")
+		public static bool? SetPause(Http http_ctx, bool pause, string host = "http://localhost/")
 		{
 			Result<HttpResponses.Default_> response;
 
