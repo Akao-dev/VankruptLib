@@ -7,6 +7,12 @@ using System.Text.RegularExpressions;
 
 namespace Vankrupt.Pavlov;
 
+/// <summary>
+/// Synchronised HTTP query class
+/// </summary>
+/// <remarks>
+/// WARNING: Not multithread safe! Do not share instance between threads!
+/// </remarks>
 public class Http : IDisposable
 {
 
@@ -120,6 +126,10 @@ public class Http : IDisposable
 	private readonly object _lock = new();
 	public string? UserAgent { get; set; } = null;
 
+	/// <summary>
+	/// Get or set HTTP request timeout.
+	/// </summary>
+	public TimeSpan Timeout { get { return _httpClient.Timeout; } set { _httpClient.Timeout = value; } }
 
 	private HttpClientHandler NewHandler
 	{
