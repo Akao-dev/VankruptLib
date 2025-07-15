@@ -168,7 +168,7 @@ public static class Game
 		/// <param name="http_ctx">Context of special HTTP handling class.</param>
 		/// <param name="replay_id">Replay id to be loaded.</param>
 		/// <param name="host">Host address URL.</param>
-		/// <returns>True, if error occurred.</returns>
+		/// <returns>True, on success.</returns>
 		/// <exception cref="InvalidDataException">If invalid host URL is provided.</exception>
 		public static bool LoadReplay(Http http_ctx, string replay_id, string host = "http://localhost/")
 		{
@@ -189,7 +189,7 @@ public static class Game
 		/// </summary>
 		/// <param name="http_ctx">Context of special HTTP handling class.</param>
 		/// <param name="host">Host address URL.</param>
-		/// <returns>Match events.</returns>
+		/// <returns>Result of API call. Possibly containing match events.</returns>
 		/// <exception cref="InvalidDataException">If invalid host URL is provided.</exception>
 		public static Result<HttpResponses.MatchEvents_> GetEvents(Http http_ctx, string host = "http://localhost/")
 		{
@@ -205,7 +205,7 @@ public static class Game
 		/// </summary>
 		/// <param name="http_ctx">Context of special HTTP handling class.</param>
 		/// <param name="host">Host address URL.</param>
-		/// <returns>Replay status.</returns>
+		/// <returns>Result of API call. Possibly containing status of replay.</returns>
 		/// <exception cref="InvalidDataException">If invalid host URL is provided.</exception>
 		public static Result<HttpResponses.MatchStatus_> GetStatus(Http http_ctx, string host = "http://localhost/")
 		{
@@ -221,7 +221,7 @@ public static class Game
 		/// </summary>
 		/// <param name="http_ctx">Context of special HTTP handling class.</param>
 		/// <param name="host">Host address URL.</param>
-		/// <returns>Locations.</returns>
+		/// <returns>Result of API call. Possibly containing player, bomb and camera locations.</returns>
 		/// <exception cref="InvalidDataException">If invalid host URL is provided.</exception>
 		public static Result<HttpResponses.Locations_> GetLocations(Http http_ctx, string host = "http://localhost/")
 		{
@@ -237,7 +237,7 @@ public static class Game
 		/// </summary>
 		/// <param name="http_ctx">Context of special HTTP handling class.</param>
 		/// <param name="host">Host address URL.</param>
-		/// <returns>Killfeed.</returns>
+		/// <returns>Result of API call. Possibly containing killfeed.</returns>
 		/// <exception cref="InvalidDataException">If invalid host URL is provided.</exception>
 		public static Result<HttpResponses.Killfeed_> GetKillfeed(Http http_ctx, string host = "http://localhost/")
 		{
@@ -253,21 +253,15 @@ public static class Game
 		/// </summary>
 		/// <param name="http_ctx">Context of special HTTP handling class.</param>
 		/// <param name="host">Host address URL.</param>
-		/// <returns>Match time. Null on error.</returns>
+		/// <returns>Result of API call. Possibly containing seconds passed since replay started.</returns>
 		/// <exception cref="InvalidDataException">If invalid host URL is provided.</exception>
-		public static double? GetTime(Http http_ctx, string host = "http://localhost/")
+		public static Result<HttpResponses.MatchTime_> GetTime(Http http_ctx, string host = "http://localhost/")
 		{
-			Result<HttpResponses.MatchTime_> result;
-
 			// Append path to url
 			string url = UrlAppend(host, UrlPath_MatchTime);
 
 			// Call API
-			result = http_ctx.GetJson<HttpResponses.MatchTime_>(url, null, null);
-
-			// Return result
-			if (!result.OK) return null;
-			return result.Data?.MatchTime ?? null;
+			return http_ctx.GetJson<HttpResponses.MatchTime_>(url, null, null);
 		}
 
 		/// <summary>
@@ -301,20 +295,15 @@ public static class Game
 		/// <param name="http_ctx">Context of special HTTP handling class.</param>
 		/// <param name="host">Host address URL.</param>
 		/// <returns>Pause state. Null on error.</returns>
+		/// <returns>Result of API call. Possibly containing pause state.</returns>
 		/// <exception cref="InvalidDataException">If invalid host URL is provided.</exception>
-		public static bool? GetPause(Http http_ctx, string host = "http://localhost/")
+		public static Result<HttpResponses.Pause_> GetPause(Http http_ctx, string host = "http://localhost/")
 		{
-			Result<HttpResponses.Pause_> result;
-
 			// Append path to url
 			string url = UrlAppend(host, UrlPath_Pause);
 
 			// Call API
-			result = http_ctx.GetJson<HttpResponses.Pause_>(url, null, null);
-
-			// Return result
-			if (!result.OK) return null;
-			return result.Data?.Paused ?? null;
+			return http_ctx.GetJson<HttpResponses.Pause_>(url, null, null);
 		}
 
 		/// <summary>
