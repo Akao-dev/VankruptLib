@@ -19,14 +19,14 @@ public class TestConnectionBuffer : IConnectionBuffer
 			Console.WriteLine($"{DateTime.Now} Events: {(result.OK ? "OK" : "ERROR")}");
 			if (!result.OK || result.Data == null) return;
 
-			Console.WriteLine($" 🗓️ MatchTime={result.Data.MatchTime,-5:F3}s");
-			Console.WriteLine($" 🗓️ TotalTime={result.Data.TotalTime,-5:F3}s");
+			Console.WriteLine($" 🗓️  MatchTime={result.Data.MatchTime,-5:F3}s");
+			Console.WriteLine($" 🗓️  TotalTime={result.Data.TotalTime,-5:F3}s");
 
 			if (result.Data.Events != null)
 			{
 				foreach (var m_event in result.Data.Events)
 				{
-					Console.WriteLine($" 🗓️ [{m_event.Time,-5:F3}s] Type={m_event.Name} Add-Data={m_event.AdditionalData} {m_event.Planter} {m_event.Diffuser}");
+					Console.WriteLine($" 🗓️  [{m_event.Time,-5:F3}s] Type={m_event.Name} Add-Data={m_event.AdditionalData} {m_event.Planter} {m_event.Diffuser}");
 				}
 			}
 		}
