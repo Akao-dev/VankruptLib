@@ -81,12 +81,11 @@ public static class Tools
 	}
 
 	/// <summary>
-	/// Parses Vankrupt id from user avatar.
+	/// Returns last string of text after last forward-slash '/' and last dot '.'.
 	/// </summary>
-	/// <param name="url">Avatar url of vankrupt user.</param>
-	/// <returns>Vankrupt user id.</returns>
-	/// <exception cref="InvalidDataException">When url or user id is invalid.</exception>
-	public static string? ParseAvatarUrl(string? url)
+	/// <param name="url">Url to parse</param>
+	/// <returns>Filename without extension.</returns>
+	public static string? ParseItemUrl(string? url)
 	{
 		string buffer;
 
@@ -109,7 +108,21 @@ public static class Tools
 		if (idx < 0) return null;
 
 		// Remove file extension (substring that ends before file extension dot)
-		buffer = buffer[..idx];
+		return buffer[..idx];
+	}
+
+	/// <summary>
+	/// Parses Vankrupt id from user avatar.
+	/// </summary>
+	/// <param name="url">Avatar url of vankrupt user.</param>
+	/// <returns>Vankrupt user id.</returns>
+	/// <exception cref="InvalidDataException">When url or user id is invalid.</exception>
+	public static string? ParseAvatarUrl(string? url)
+	{
+		string? buffer = ParseItemUrl(url);
+
+		// Input validation
+		if (url is null) return null;
 
 		// Check id is as expected
 		if (!IsValid_VankruptId(buffer)) throw new InvalidDataException($"Invalid player id '{buffer}'! ");
