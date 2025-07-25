@@ -387,16 +387,6 @@ public static class Game
 				public string? Name { get; set; } = null;
 				public double? Time { get; set; } = null;
 				public int? AdditionalData { get; set; } = null;
-				public Player_? Planter { get; set; } = null;
-				public Player_? Diffuser { get; set; } = null;
-
-
-				public class Player_
-				{
-					public string? Name { get; set; } = null;
-					public string? Avatar { get; set; } = null;
-					public bool? Tool { get; set; } = null;
-				}
 			}
 		}
 
